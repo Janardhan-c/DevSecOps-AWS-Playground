@@ -3,7 +3,9 @@ resource "aws_eks_cluster" "eks_cluster" {
   role_arn = aws_iam_role.eks_role.arn
 
   vpc_config {
-    subnet_ids = aws_subnet.public_subnets[*].id
+    subnet_ids             = aws_subnet.public_subnets[*].id  # Ensure these subnets are public
+    endpoint_public_access = true  # Allows access to the Kubernetes API publicly
+    endpoint_private_access = false  # No private endpoint
   }
 }
 resource "aws_eks_node_group" "eks_node_group" {
@@ -12,6 +14,7 @@ resource "aws_eks_node_group" "eks_node_group" {
   node_role_arn       = aws_iam_role.eks_role.arn
   subnet_ids      = aws_subnet.public_subnets[*].id
   instance_types  = ["t3.medium"]
+  
   
 
   scaling_config {
